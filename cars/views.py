@@ -1,3 +1,4 @@
+from ast import Delete
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -20,7 +21,7 @@ def cars_list(request):
     return Response(serializer.data)
 
 
-@api_view (['GET', 'PUT'])
+@api_view (['GET', 'PUT', 'DELETE'])
 def car_detail(request, pk):
     car = get_object_or_404(Car, pk=pk)
     if request.method == 'GET':
@@ -31,3 +32,6 @@ def car_detail(request, pk):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+    elif request.method == 'DELETE':
+        car.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
